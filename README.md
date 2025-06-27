@@ -84,6 +84,7 @@ You can install all dependencies at once using:
     - Calculate the final RMSE between the filtered total field strength and the ground truth.
     - Print both RMSE values to the console.
     - Generate `filtered_comparison_v3.png`, a plot showing the ground truth, noisy, and filtered signals.
+    - Generate `filtered_zoomed_v3.png`, a plot focusing on just the ground truth and filtered signals with a tight Y-axis scale to highlight the filter's precision.
 
 ## Customization
 
@@ -131,7 +132,8 @@ You can install all dependencies at once using:
     -   Comparison of ground truth vs. noisy total field strength.
     -   Simulated throttle value over the flight path.
 -   `filtered_comparison_v3.png`: A plot showing:
-    -   Ground Truth total magnetic field strength.
-    -   Noisy total magnetic field strength.
-    -   Filtered total magnetic field strength after adaptive noise cancellation.
-    -   RMSE values before and after filtering are typically included in the plot labels/title or printed to console.
+        -   Ground Truth total magnetic field strength.
+        -   Noisy total magnetic field strength.
+        -   Filtered total magnetic field strength after adaptive noise cancellation.
+        -   RMSE values before and after filtering are typically included in the plot labels/title or printed to console.
+    -   `filtered_zoomed_v3.png`: A plot similar to the above but showing only the Ground Truth and Filtered signals, with the Y-axis scaled to tightly fit these two signals, emphasizing the quality of the filter's output.

@@ -6,6 +6,7 @@ import matplotlib.pyplot as plt
 # --- Constants ---
 INPUT_CSV_FILENAME = "magnetic_readings_noisy.csv"
 OUTPUT_PLOT_FILENAME = "filtered_comparison_v3.png"
+OUTPUT_ZOOMED_PLOT_FILENAME = "filtered_zoomed_v3.png"  # New plot file
 
 # Columns to use from the CSV
 COL_GROUND_TRUTH = "b_total_strength_gt"
@@ -139,6 +140,54 @@ def plot_results(
         print(f"Error saving plot: {e}")
 
 
+def plot_zoomed_results(x_coords, ground_truth, filtered_signal, k_optimal, rmse_after):
+    """Plots a zoomed-in comparison of the ground truth and filtered signals."""
+    print(f"Plotting zoomed results to {OUTPUT_ZOOMED_PLOT_FILENAME}...")
+    plt.figure(figsize=(15, 8))
+
+    plt.plot(
+        x_coords,
+        ground_truth,
+        "b--",
+        label=f"Ground Truth ({COL_GROUND_TRUTH})",
+        alpha=0.9,
+    )
+    plt.plot(
+        x_coords,
+        filtered_signal,
+        "k-",
+        label=f"Filtered Signal (K={k_optimal:.4f})\nRMSE_after: {rmse_after:.6e}",
+        alpha=0.9,
+        linewidth=1.5,
+    )
+
+    # Auto-scale Y-axis to fit these two lines tightly
+    min_val = min(np.min(ground_truth), np.min(filtered_signal))
+    max_val = max(np.max(ground_truth), np.max(filtered_signal))
+    padding_fraction = 0.05  # 5% padding
+    data_range = max_val - min_val
+
+    if data_range == 0:  # Handle case where signals are perfectly flat and identical
+        padding = 0.1 * abs(max_val) if max_val != 0 else 0.1
+    else:
+        padding = data_range * padding_fraction
+
+    plt.ylim(min_val - padding, max_val + padding)
+
+    plt.title("Zoomed Comparison: Ground Truth vs. Filtered Signal (Investor Plot)")
+    plt.xlabel("X Position (m)")
+    plt.ylabel("Total Magnetic Field Strength (Tesla)")
+    plt.legend(loc="upper right")
+    plt.grid(True, linestyle=":", alpha=0.7)
+    plt.tight_layout()
+
+    try:
+        plt.savefig(OUTPUT_ZOOMED_PLOT_FILENAME)
+        print(f"Zoomed plot saved successfully to {OUTPUT_ZOOMED_PLOT_FILENAME}")
+    except Exception as e:
+        print(f"Error saving zoomed plot: {e}")
+
+
 def main():
     """Main function to run the filtering process."""
     data = load_data()
@@ -177,6 +226,14 @@ def main():
         filtered_signal,
         optimal_k,
         rmse_before_filtering,
+        rmse_after_filtering,
+    )
+    # Also generate the zoomed plot
+    plot_zoomed_results(
+        x_coords,
+        ground_truth,
+        filtered_signal,
+        optimal_k,
         rmse_after_filtering,
     )
 
