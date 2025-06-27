@@ -1,0 +1,2 @@
+# Magpie
+Finds shiny things
